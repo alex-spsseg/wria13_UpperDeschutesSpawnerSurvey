@@ -964,8 +964,15 @@
       .ctrl-btn { padding: 10px 12px; font-size: 13px; }
 
       #tour-sidebar-toggle { width: 44px; height: 44px; font-size: 20px; }
+      /* On a phone the stop list stops above the minimap (190px tall, 12px up from the bottom) instead of covering
+      it, and it is nearly solid so the minimap buttons behind it do not show through. The list scrolls inside. */
       #tour-sidebar {
-        top: 64px; left: 8px; right: 8px; width: auto; max-width: none; max-height: 60vh;
+        top: 64px; left: 8px; right: 8px; width: auto; max-width: none;
+        max-height: min(60vh, max(200px, calc(100vh - 280px)));
+        background: rgba(14, 27, 51, 0.98);
+      }
+      @supports (height: 100dvh) {
+        #tour-sidebar { max-height: min(60dvh, max(200px, calc(100dvh - 280px))); }
       }
       #tour-sidebar.collapsed { transform: translateY(-20px); }
       .tour-stop-link { padding: 12px 10px; font-size: 14px; }
@@ -1033,7 +1040,7 @@
 </head>
 <body>
 
-  <div id="build-timestamp">Built 2026-10-29 11:01:27</div>
+  <div id="build-timestamp">Built 2026-10-29 14:01:48</div>
 
   <div id="status-banner"></div>
 
@@ -5925,6 +5932,11 @@
       toggleBtn.style.display = 'block';
       document.body.appendChild(toggleBtn);
       toggleBtn.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
+      // On a phone (a narrow screen, or a touch screen held sideways) the stop list starts closed so it does not
+      // fill the screen. The menu button opens it. Desktop keeps it open.
+      if (window.matchMedia && window.matchMedia('(max-width: 700px), (orientation: landscape) and (max-height: 540px) and (pointer: coarse)').matches) {
+        sidebar.classList.add('collapsed');
+      }
 
       var titleEl = document.createElement('div');
       titleEl.id = 'tour-sidebar-title';

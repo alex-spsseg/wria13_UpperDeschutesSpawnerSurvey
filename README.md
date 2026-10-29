@@ -6,4 +6,4 @@ Live site: [All tours](https://alex-spsseg.github.io/wria13_UpperDeschutesSpawne
 
 ## Tours
 
-- [Upper Deschutes Tribs Site Visit (44.3 cfs)](https://alex-spsseg.github.io/wria13_UpperDeschutesSpawnerSurvey/index.html?tour=20261028) (visited 2026-10-28, 133 stops)
+- [Upper Deschutes Tribs Site Visit (44.3 cfs)](https://alex-spsseg.github.io/wria13_UpperDeschutesSpawnerSurvey/index.html?tour=20261028) (visited 2026-10-28, 132 stops)

@@ -737,13 +737,6 @@
       "alt": 175.86
     },
     {
-      "site_id": "img_20261028_132549_00_253",
-      "display_name": "Mitchell - Stop 6",
-      "lat": 46.79206634406896,
-      "lng": -122.46743258762118,
-      "alt": 168.76
-    },
-    {
       "site_id": "img_20261028_132411_00_252",
       "display_name": "Mitchell - Stop 7",
       "lat": 46.79189285861969,
@@ -938,7 +931,7 @@
   "overlays": [
     {
       "label": "REMs (2024-2025 lIDAR)",
-      "url": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/UpperDeschutesTribs_REM_2024lidar/MapServer/tile/{z}/{y}/{x}",
+      "url": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/UpperDeschutesTribs_REM_2024lidar_notranspo/MapServer/tile/{z}/{y}/{x}",
       "opacity": 1.0,
       "default_on": true,
       "type": "tile"
@@ -1068,7 +1061,6 @@
         "img_20261028_132942_00_256",
         "img_20261028_132840_00_255",
         "img_20261028_132709_00_254",
-        "img_20261028_132549_00_253",
         "img_20261028_132411_00_252",
         "img_20261028_132241_00_251",
         "img_20261028_132123_00_250",
