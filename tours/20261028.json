@@ -935,7 +935,15 @@
   ],
   "basemap_type": "xyz_tile",
   "basemap_url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-  "overlays": [],
+  "overlays": [
+    {
+      "label": "REMs (2024-2025 lIDAR)",
+      "url": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/UpperDeschutesTribs_REM_2024lidar/MapServer/tile/{z}/{y}/{x}",
+      "opacity": 1.0,
+      "default_on": true,
+      "type": "tile"
+    }
+  ],
   "forward_label": "",
   "backward_label": "",
   "bookmarks": [
