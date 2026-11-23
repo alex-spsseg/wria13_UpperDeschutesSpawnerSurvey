@@ -5,8 +5,8 @@
   "pitch_1": 0.0,
   "yaw_2": 0.0,
   "pitch_2": 0.0,
-  "lat": 46.79638113244134,
-  "lng": -122.44167673837725,
+  "lat": 46.79633566,
+  "lng": -122.44165599,
   "label_1": "IMG_20261028_100638_00_163 (2026/10/28)",
   "label_2": "",
   "autorotate": false,
@@ -19,8 +19,13 @@
   "basemap_url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
   "mobile_1": 5000,
   "mobile_2": 0,
-  "heading_offset": null,
+  "heading_offset": 130.3858832052967,
   "overlays": [],
   "alt_checked": true,
-  "alt": 202.22
+  "alt": 202.22,
+  "gps_original": [
+    46.79638113244134,
+    -122.44167673837725
+  ],
+  "heading_confirmed": true
 }

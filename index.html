@@ -284,6 +284,19 @@
     repo has a flow link saved in the publisher (Tours Page Settings). */
     #site-map-flow-btn { right: 224px; display: none; }
     #site-map-flow-btn.armed { background: #019fc4; color: #fff; border-color: #019fc4; }
+    /* The 3D button opens this place in the terrain viewer. Hidden until the repo has a terrain link saved in the publisher
+    (Tours Page Settings), and while the stop is outside that terrain site. */
+    #site-map-terrain-btn {
+      position: absolute; z-index: 1600; top: 8px; right: 260px; width: 30px; height: 30px; border-radius: 4px;
+      border: 2px solid rgba(0,0,0,0.2); background: #fff; color: #333; cursor: pointer; padding: 0;
+      display: none; align-items: center; justify-content: center;
+    }
+    #site-map-terrain-btn:hover { background: #f4f4f4; }
+    #container.swapped #site-map-terrain-btn { top: 64px; }
+    .terrain-rem-legend { background: rgba(14,27,51,0.92); color: #e8eef7; border: 1px solid #1b3f95; border-radius: 6px; padding: 6px 8px; min-width: 150px; font: 11px/1.25 -apple-system, Segoe UI, Roboto, sans-serif; }
+    .terrain-rem-legend .trl-title { font-weight: 600; margin-bottom: 4px; }
+    .terrain-rem-legend .trl-bar { height: 10px; border-radius: 2px; }
+    .terrain-rem-legend .trl-labels { display: flex; justify-content: space-between; margin-top: 2px; color: #b8c6dc; }
     /* Swap: the map takes the big screen (placed exactly like the enlarged map) and the 360 view moves into the inset,
     at the size the map inset was. The swap button sits under the make the map bigger button on a desktop. */
     #site-map-swap-btn { left: 10px; top: 118px; }
@@ -373,6 +386,8 @@
     #flow-box.collapsed .fsum { display: block; }
     #flow-box.collapsed select, #flow-box.collapsed .fhide { display: none !important; }
     #flow-box .fleg { height: 6px; border-radius: 3px; margin-top: 5px; }
+    #flow-box .fhere { margin-top: 6px; padding-top: 5px; border-top: 1px solid #1b3f95; color: #e8eef7; font-size: 11px; line-height: 1.35; white-space: normal; }
+    #flow-box .fhere b { color: #fff; }
     #flow-box .fnum { display: flex; justify-content: space-between; color: #9fb2cc; font-size: 10px; margin-top: 1px; }
     /* Make the map bigger, on every screen. The map grows to nearly the whole window, leaving the top clear for the
     menu and Prev and Next, and the button (or Esc) puts it back at the size it was. On a desktop, --map-left is set
@@ -458,7 +473,8 @@
       #site-map-follow-btn { right: 140px; }
       #site-map-expand-btn { right: 184px; left: auto; top: 8px; }
       #site-map-flow-btn { right: 228px; }
-      #site-map-swap-btn { right: 272px; left: auto; top: 8px; }
+      #site-map-terrain-btn { width: 38px; height: 38px; right: 272px; }
+      #site-map-swap-btn { right: 316px; left: auto; top: 8px; }
       #site-map-panel .leaflet-top.leaflet-right { margin-top: 54px; }
       #site-map-panel .leaflet-bar a { width: 38px; height: 38px; line-height: 38px; }
       #site-map-panel .leaflet-control-layers-toggle { width: 38px; height: 38px; background-size: 22px 22px; }
@@ -504,6 +520,11 @@
     }
     #view-menu.open #view-menu-list { display: flex; }
     #view-menu-list .ctrl-btn { text-align: left; white-space: nowrap; }
+    /* The Tour, Terrain, Flow pill: the same switcher the terrain and flow viewers show. Terrain and Flow appear only when the repo
+    has those links (Tours Page Settings), and Terrain only for stops inside the terrain site. */
+    #linked-pill.snav { padding: 3px; }
+    #linked-pill.snav a, #linked-pill.snav span { padding: 5px 12px; font-size: 12px; font-weight: bold; }
+    #linked-pill.snav a:hover { background: #132447; }
 
     .ctrl-btn {
       background: #1b3f95; color: #ffffff; border: 1px solid #019fc4;
@@ -1147,6 +1168,12 @@
     .edit-tab:hover { color: #fff; background: rgba(179, 102, 255, 0.22); }
     .edit-tab.on { background: #b366ff; color: #1a0e33; }
     #edit-tools-panel .edit-group { display: none !important; border: 0; padding: 0; }
+    /* Flat stop in local preview: only the Heading and Position blocks apply (aim at a map point or nudge the dial). */
+    body.flat-stop #edit-tools-panel #edit-tabs { display: none !important; }
+    body.flat-stop #edit-tools-panel #heading-group,
+    body.flat-stop #edit-tools-panel #position-group { display: block !important; }
+    body.flat-stop #edit-tools-panel #hotspots-group { display: none !important; }
+    body.flat-stop #hdg-aim-btn { display: none; }
     #edit-tools-panel[data-tab="hotspots-group"] #hotspots-group,
     #edit-tools-panel[data-tab="position-group"] #position-group,
     #edit-tools-panel[data-tab="heading-group"] #heading-group { display: block !important; }
@@ -1248,12 +1275,14 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://alex-spsseg.github.io/spsseg_tours/shared/spsseg_nav.js"></script>
+  <script>window.SpssegNav || document.write('<script src="spsseg_nav.js"><\/script>');</script>
   <script src="vendor/marzipano.js"></script>
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
 </head>
 <body>
 
-  <div id="build-timestamp">Built 2026-11-02 12:09:00</div>
+  <div id="build-timestamp">Built 2026-11-23 12:13:16</div>
 
   <div id="status-banner"></div>
 
@@ -1310,6 +1339,7 @@
       <button id="control-bar-toggle" class="ctrl-btn" type="button" title="Menu">&#8942;</button>
       <div id="control-bar-buttons">
         <button id="toggle-btn" class="ctrl-btn" type="button" style="display:none;">Toggle</button>
+        <div id="linked-pill" style="display:none"></div>
         <button id="hotspots-toggle-btn" class="ctrl-btn" type="button" style="display:none;"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="lbl">Hide Hotspots</span></button>
         <button id="map-toggle-btn" class="ctrl-btn" type="button" style="display:none;"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg></span><span class="lbl">Show Map</span></button>
         <div id="view-menu">
@@ -1360,6 +1390,7 @@
       <button id="site-map-swap-btn" type="button" title="Swap: show the map big and the 360 view in the inset"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 7h11l-3-3 1.4-1.4L22 8l-5.6 5.4L15 12l3-3H7zM17 17H6l3 3-1.4 1.4L2 16l5.6-5.4L9 12l-3 3h11z"/></svg></button>
       <div id="swap-tools"><button type="button" id="swap-zoom-in" title="Zoom in" aria-label="Zoom in">+</button><button type="button" id="swap-zoom-out" title="Zoom out" aria-label="Zoom out">&#8722;</button><button type="button" id="swap-tools-back" title="Swap back: 360 view big, map in the inset" aria-label="Swap back"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 7h11l-3-3 1.4-1.4L22 8l-5.6 5.4L15 12l3-3H7zM17 17H6l3 3-1.4 1.4L2 16l5.6-5.4L9 12l-3 3h11z"/></svg></button></div>
       <button id="site-map-flow-btn" type="button" title="Show the animated water flow on this map"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8c2 0 2-2 4.5-2S10 8 12 8s2.5-2 4.5-2S19 8 21 8"/><path d="M3 13c2 0 2-2 4.5-2S10 13 12 13s2.5-2 4.5-2S19 13 21 13"/><path d="M3 18c2 0 2-2 4.5-2S10 18 12 18s2.5-2 4.5-2S19 18 21 18"/></svg></button>
+      <button id="site-map-terrain-btn" type="button" title="Open this place in the 3D terrain viewer"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19l6-10 4 6 3-4 5 8z"/><path d="M3 19h18"/></svg></button>
       <button id="site-map-coords-btn" type="button" title="Coordinates: go to a position, or copy the cursor position (right click the map to drop a pin)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg></button>
       <div id="site-map-coords-box">
         <input id="site-map-coords-input" type="text" placeholder="Go to lat, lng" autocomplete="off" spellcheck="false" aria-label="Go to coordinates, latitude then longitude">
@@ -1391,9 +1422,11 @@
           <button id="use-view-right-btn" class="edit-tool-btn" type="button" style="display:none;">Use Right View</button>
           <button id="pin-match-btn" class="edit-tool-btn" type="button" style="display:none;">Pin Match Point (0/4)</button>
           <button id="clear-pins-btn" class="edit-tool-btn danger" type="button" style="display:none;">Clear Pins</button>
-          <div id="pin-match-help" style="display:none;">Aim both panels at the same real-world
-            feature, then Pin. Do 2-4 features spread around the scene (not clustered) for the
-            best fit, then lock -- alignment will hold across the whole pano, not just at one point.</div>
+          <div id="pin-match-help" style="display:none;">How to line up two dates: 1) click the lock button
+            so it says UNLOCKED. 2) Drag each panel until the same far away feature (bridge, pier, ridge) is in the
+            center of both. 3) Click Pin. 4) Repeat for 2 to 4 features spread around the scene. 5) Click the lock
+            button so it says LOCKED. Pins save for this pair of dates, and other dates line up through the pairs you have done.</div>
+          <div id="align-status" style="display:none; font-size:12px; margin-top:6px; line-height:1.4; color:#f3e8ff; font-weight:600;"></div>
         </div>
         <div id="edit-tabs" role="tablist" style="display:none;">
           <button type="button" class="edit-tab" data-tab="hotspots-group" style="display:none;">Hotspots</button>
@@ -2011,6 +2044,56 @@
       var d = det3(matMul(Vm, matTranspose(U))) > 0 ? 1 : -1;
       var D = [[1, 0, 0], [0, 1, 0], [0, 0, d]];
       return matMul(matMul(Vm, D), matTranspose(U));
+    }
+
+    // Alignment between dates of a location. Every pair you pin is saved as a link (config.align_links:
+    // {a, b, anchors}) between two photo ids. Any two dates are lined up by chaining the saved links
+    // between them (A to B, B to C gives A to C), so 4 dates need 3 pinned pairs, not 6.
+    function alignEdgeRotation(link, fromId) {
+      var aList = link.anchors.map(function (p) { return dirFromYawPitch(p.yaw_a, p.pitch_a); });
+      var bList = link.anchors.map(function (p) { return dirFromYawPitch(p.yaw_b, p.pitch_b); });
+      var R = kabschRotation(aList, bList); // maps link.a's frame to link.b's frame
+      return link.a === fromId ? R : matTranspose(R);
+    }
+    // Returns { rot, path } (path = photo ids from the left photo to the right one) or null when no chain exists.
+    function resolveAlignRotation(links, fromId, toId) {
+      links = (links || []).filter(function (l) { return l && l.anchors && l.anchors.length >= 2; });
+      var seen = {};
+      seen[fromId] = { rot: [[1, 0, 0], [0, 1, 0], [0, 0, 1]], path: [fromId] };
+      var queue = [fromId];
+      while (queue.length) {
+        var cur = queue.shift();
+        if (cur === toId) break;
+        for (var i = 0; i < links.length; i++) {
+          var l = links[i];
+          var other = l.a === cur ? l.b : (l.b === cur ? l.a : null);
+          if (other == null || seen[other]) continue;
+          seen[other] = { rot: matMul(alignEdgeRotation(l, cur), seen[cur].rot), path: seen[cur].path.concat([other]) };
+          queue.push(other);
+        }
+      }
+      return seen[toId] || null;
+    }
+
+    function sendAlignLink(siteIdArg, aId, bId, anchors, btn) {
+      var payload = anchors.map(function (a) {
+        return { yaw_a: a.l.yaw * 180 / Math.PI, pitch_a: a.l.pitch * 180 / Math.PI,
+                 yaw_b: a.r.yaw * 180 / Math.PI, pitch_b: a.r.pitch * 180 / Math.PI };
+      });
+      var original = btn ? btn.textContent : null;
+      fetch('/__save_align_link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ site_id: siteIdArg, a: aId, b: bId, anchors: payload }),
+      }).then(function (res) {
+        if (!btn) return;
+        btn.textContent = res.ok ? 'Saved!' : 'Failed, try again';
+        setTimeout(function () { btn.textContent = original; }, 1400);
+      }).catch(function () {
+        if (!btn) return;
+        btn.textContent = 'Preview server not reachable';
+        setTimeout(function () { btn.textContent = original; }, 1800);
+      });
     }
 
     function sendLockAnchors(anchors, siteIdOverride, btn) {
@@ -2961,10 +3044,30 @@
           // pinned.
           var lockYawOffset = 0, lockPitchOffset = 0;
           var lockRotation = null; // 3x3 matrix, left-to-right, once 2 points are pinned
+          // Locking must never move either panel. The solved rotation is only a best fit (the drone is in a
+          // different spot on each date), so at the moment of locking we record the small leftover rotation
+          // between where the rotation predicts the right panel and where it actually is, and keep applying it.
+          var lockCorr = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+          function rotationBetween(a, b) {
+            a = vNormalize(a); b = vNormalize(b);
+            var c = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+            var ax = vCross(a, b), s = Math.hypot(ax[0], ax[1], ax[2]);
+            if (s < 1e-9) return [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+            var k = [ax[0] / s, ax[1] / s, ax[2] / s];
+            var K = [[0, -k[2], k[1]], [k[2], 0, -k[0]], [-k[1], k[0], 0]];
+            var K2 = matMul(K, K), R = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+            for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) R[i][j] += s * K[i][j] + (1 - c) * K2[i][j];
+            return R;
+          }
           function captureLockOffset() {
             var pL = viewL.parameters(), pR = viewR.parameters();
             lockYawOffset = pR.yaw - pL.yaw;
             lockPitchOffset = pR.pitch - pL.pitch;
+            lockCorr = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+            if (lockRotation) {
+              var pred = matApply(lockRotation, dirFromYawPitch(pL.yaw, pL.pitch));
+              lockCorr = rotationBetween(pred, dirFromYawPitch(pR.yaw, pR.pitch));
+            }
           }
           function computeLockRotation(anchors) {
             if (!anchors || anchors.length < 2) { lockRotation = null; return; }
@@ -2972,7 +3075,22 @@
             var bList = anchors.map(a => dirFromYawPitch(a.r.yaw, a.r.pitch));
             lockRotation = kabschRotation(aList, bList);
           }
-          if (config.lock_anchors && config.lock_anchors.length >= 2) {
+          var alignLinks = (config._alignLinks || []).slice();
+          var alignIdA = config._locA, alignIdB = config._locB;
+          var alignInfo = null;
+          function refreshAlign() {
+            alignInfo = (config._location && alignIdA && alignIdB) ? resolveAlignRotation(alignLinks, alignIdA, alignIdB) : null;
+            lockRotation = alignInfo ? alignInfo.rot : null;
+          }
+          if (config._location && alignIdA && alignIdB) {
+            refreshAlign();
+            if (lockRotation) {
+              // Start the right photo already lined up with the left one.
+              var p0 = viewL.parameters();
+              var o0 = yawPitchFromDir(matApply(lockRotation, dirFromYawPitch(p0.yaw, p0.pitch)));
+              viewR.setParameters({ yaw: o0.yaw, pitch: o0.pitch, fov: p0.fov });
+            }
+          } else if (config.lock_anchors && config.lock_anchors.length >= 2) {
             computeLockRotation(config.lock_anchors.map(a => ({
               l: { yaw: a.yaw_l, pitch: a.pitch_l }, r: { yaw: a.yaw_r, pitch: a.pitch_r },
             })));
@@ -2984,7 +3102,8 @@
             var sp = src.parameters();
             if (lockRotation) {
               var dir = dirFromYawPitch(sp.yaw, sp.pitch);
-              var outDir = srcIsLeft ? matApply(lockRotation, dir) : matApply(matTranspose(lockRotation), dir);
+              var eff = matMul(lockCorr, lockRotation); // left to right, including the leftover from the moment of locking
+              var outDir = srcIsLeft ? matApply(eff, dir) : matApply(matTranspose(eff), dir);
               var outYp = yawPitchFromDir(outDir);
               tgt.setParameters({ yaw: outYp.yaw, pitch: outYp.pitch, fov: sp.fov });
             } else {
@@ -3049,14 +3168,32 @@
             useLeftBtn.style.display = 'inline-block';
             useRightBtn.style.display = 'inline-block';
           }
+          function setLockLabel() {
+            unlockBtn.textContent = aimLocked ? 'Views LOCKED (click to unlock)' : 'Views UNLOCKED (click to lock)';
+            unlockBtn.classList.toggle('active', !aimLocked);
+          }
+          setLockLabel();
+          var alignStatus = document.getElementById('align-status');
+          function dateTextFor(id) {
+            var d = (config._locDates || []).filter(function (x) { return x.id === id; })[0];
+            return d ? d.text : id;
+          }
+          function updateAlignStatus() {
+            if (!alignStatus || !config._location) return;
+            var msg;
+            if (!alignInfo) msg = 'This pair is not aligned yet. Unlock, aim both panels at the same far feature, Pin, repeat 2 to 4 times, then lock.';
+            else if (alignInfo.path.length === 2) msg = 'Aligned: pinned directly for this pair.';
+            else msg = 'Aligned through ' + alignInfo.path.slice(1, -1).map(dateTextFor).join(', ') + '. Pin this pair to refine it.';
+            alignStatus.textContent = msg;
+          }
+          updateAlignStatus();
           unlockBtn.addEventListener('click', () => {
             aimLocked = !aimLocked;
             // Re-locking should preserve whatever offset independent
             // aim was just used to set up, not snap back to a plain
             // 1:1 match -- see captureLockOffset above.
             if (aimLocked) captureLockOffset();
-            unlockBtn.textContent = aimLocked ? 'Unlock Independent Aim' : 'Lock Views Together';
-            unlockBtn.classList.toggle('active', !aimLocked);
+            setLockLabel();
           });
           useLeftBtn.addEventListener('click', () => {
             var v = viewL.parameters();
@@ -3073,6 +3210,7 @@
             pinMatchBtn.style.display = 'inline-block';
             clearPinsBtn.style.display = 'inline-block';
             pinHelp.style.display = 'block';
+            if (alignStatus && config._location) alignStatus.style.display = 'block';
           }
           // Persisted anchors from config.json, if this site already has
           // some saved, seed both the in-memory pin list (so the count
@@ -3080,13 +3218,61 @@
           // (already computed above from the same config value, kept
           // here only so both stay in sync going forward).
           var MAX_PINS = 4;
-          var pinnedAnchors = (config.lock_anchors && config.lock_anchors.length >= 2)
-              ? config.lock_anchors.map(a => ({
-                  l: { yaw: a.yaw_l, pitch: a.pitch_l }, r: { yaw: a.yaw_r, pitch: a.pitch_r },
-                }))
-              : [];
+          var pinnedAnchors = [];
+          if (config._location && alignIdA && alignIdB) {
+            var direct = alignLinks.filter(function (l) {
+              return l.anchors && l.anchors.length >= 2 && ((l.a === alignIdA && l.b === alignIdB) || (l.a === alignIdB && l.b === alignIdA));
+            })[0];
+            if (direct) {
+              pinnedAnchors = direct.anchors.map(function (a) {
+                var fwd = direct.a === alignIdA;
+                return fwd
+                  ? { l: { yaw: a.yaw_a, pitch: a.pitch_a }, r: { yaw: a.yaw_b, pitch: a.pitch_b } }
+                  : { l: { yaw: a.yaw_b, pitch: a.pitch_b }, r: { yaw: a.yaw_a, pitch: a.pitch_a } };
+              });
+            }
+          } else if (config.lock_anchors && config.lock_anchors.length >= 2) {
+            pinnedAnchors = config.lock_anchors.map(a => ({
+              l: { yaw: a.yaw_l, pitch: a.pitch_l }, r: { yaw: a.yaw_r, pitch: a.pitch_r },
+            }));
+          }
+          // Locations save the pins as a link between these two dates (see resolveAlignRotation).
+          function savePinsForPair(btn) {
+            alignLinks = alignLinks.filter(function (l) {
+              return !((l.a === alignIdA && l.b === alignIdB) || (l.a === alignIdB && l.b === alignIdA));
+            });
+            if (pinnedAnchors.length >= 2) {
+              alignLinks.push({ a: alignIdA, b: alignIdB, anchors: pinnedAnchors.map(function (p) {
+                return { yaw_a: p.l.yaw, pitch_a: p.l.pitch, yaw_b: p.r.yaw, pitch_b: p.r.pitch };
+              }) });
+            }
+            refreshAlign();
+            captureLockOffset();
+            updateAlignStatus();
+            sendAlignLink(siteId, alignIdA, alignIdB, pinnedAnchors.length >= 2 ? pinnedAnchors : [], btn);
+          }
+          // Numbered markers on both panels at every pinned point, so you can see what has been pinned.
+          // They are drawn only in the local editing preview, never on the published page.
+          var pinMarkers = [];
+          function redrawPinMarkers() {
+            pinMarkers.forEach(function (m) { try { m.scene.hotspotContainer().destroyHotspot(m.hs); } catch (e) { /* already gone */ } });
+            pinMarkers = [];
+            if (!isLocalPreview) return;
+            pinnedAnchors.forEach(function (p, i) {
+              [[sceneL, p.l], [sceneR, p.r]].forEach(function (pair) {
+                var el = document.createElement('div');
+                el.textContent = String(i + 1);
+                el.style.cssText = 'width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:#e8590c;' +
+                  'border:2px solid #fff;color:#fff;font:700 12px/18px sans-serif;text-align:center;pointer-events:none;' +
+                  'box-shadow:0 0 0 1px rgba(0,0,0,0.6);';
+                var hs = pair[0].hotspotContainer().createHotspot(el, { yaw: pair[1].yaw, pitch: pair[1].pitch });
+                pinMarkers.push({ scene: pair[0], hs: hs });
+              });
+            });
+          }
           function updatePinUI() {
             pinMatchBtn.textContent = 'Pin Match Point (' + pinnedAnchors.length + '/' + MAX_PINS + ')';
+            redrawPinMarkers();
           }
           updatePinUI();
           pinMatchBtn.addEventListener('click', () => {
@@ -3102,15 +3288,24 @@
             // improves the least-squares fit, and saving as you go
             // means you keep whatever you've got if you stop early.
             if (pinnedAnchors.length >= 2) {
-              computeLockRotation(pinnedAnchors);
-              sendLockAnchors(pinnedAnchors, null, pinMatchBtn);
+              if (config._location && alignIdA && alignIdB) {
+                savePinsForPair(pinMatchBtn);
+              } else {
+                computeLockRotation(pinnedAnchors);
+                captureLockOffset();
+                sendLockAnchors(pinnedAnchors, null, pinMatchBtn);
+              }
             }
           });
           clearPinsBtn.addEventListener('click', () => {
             pinnedAnchors = [];
-            lockRotation = null;
             updatePinUI();
-            sendLockAnchors([], null, clearPinsBtn);
+            if (config._location && alignIdA && alignIdB) {
+              savePinsForPair(clearPinsBtn);
+            } else {
+              lockRotation = null;
+              sendLockAnchors([], null, clearPinsBtn);
+            }
           });
           document.getElementById('pano-left').addEventListener('click', (e) => {
             if (!placingHotspot) return;
@@ -4038,6 +4233,7 @@
         _imgNameL: A.path || ('img' + (ia + 1)), _imgNameR: B.path || ('img' + (ib + 1)),
         _photoIndex: ia, _locSlots: { '1': ia, '2': ib },
         _locView: view, _locDates: locationDatesList(cfg), _locA: A.id, _locB: B.id,
+        _alignLinks: cfg.align_links || [],
       });
     }
 
@@ -4307,15 +4503,25 @@
     // velocity, with moving flow lines, directly on this map, underneath the stop pins and the view cone. A link to
     // the flow site list (no ?site=) just opens in a new tab instead.
     var flowLink = '';
+    var repoFlowUrl = '', repoTerrainUrl = '', tourFlowUrl = '', tourTerrainUrl = '';
+    // A link set for this tour (tours/<id>.json) wins over the repo wide one (landing_config.json).
+    function applyTourLinks() {
+      flowLink = tourFlowUrl || repoFlowUrl; updateFlowButton();
+      setTerrainLink(tourTerrainUrl || repoTerrainUrl);
+    }
+    window.setTourLinkOverrides = function (flowUrl, terrainUrl) {
+      tourFlowUrl = String(flowUrl || '').trim(); tourTerrainUrl = String(terrainUrl || '').trim(); applyTourLinks();
+    };
     var flowLayer = null;
     function updateFlowButton() {
       var b = document.getElementById('site-map-flow-btn');
       if (b) b.style.display = flowLink ? 'flex' : 'none';
+      try { refreshLinkedButtons(); } catch (e) { /* terrain buttons not ready yet */ }
     }
     fetch('landing_config.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : {}; })
       .catch(function () { return {}; })
-      .then(function (c) { flowLink = String((c && c.flow_url) || '').trim(); updateFlowButton(); });
+      .then(function (c) { repoFlowUrl = String((c && c.flow_url) || '').trim(); repoTerrainUrl = String((c && c.terrain_url) || '').trim(); applyTourLinks(); });
 
     function flowInfo() {
       var u;
@@ -4327,8 +4533,12 @@
 
     // The same link, opened in its own tab on the stop being shown, with a marker where you were standing.
     function openFlowViewer() {
+      var href = flowViewerHref();
+      if (href) window.open(href, '_blank', 'noopener');
+    }
+    function flowViewerHref() {
       var u;
-      try { u = new URL(flowLink, location.href); } catch (e) { return; }
+      try { u = new URL(flowLink, location.href); } catch (e) { return ''; }
       var ll = currentSiteLatLng();
       if (!ll && siteMap) { var c = siteMap.getCenter(); ll = [c.lat, c.lng]; }
       if (ll && u.searchParams.has('site')) {
@@ -4350,8 +4560,118 @@
         if (rr.depth !== rr.def.depth) u.searchParams.set('rd', rr.depth); else u.searchParams.delete('rd');
         if (rr.velocity !== rr.def.velocity) u.searchParams.set('rv', rr.velocity); else u.searchParams.delete('rv');
       }
-      window.open(u.toString(), '_blank', 'noopener');
+      try { u.searchParams.set('tour', tourReturnUrl()); if (terrainLink) u.searchParams.set('terrain', terrainLink); } catch (e) { /* no way back to send */ }
+      return u.toString();
     }
+
+    // ---- Linked viewers: the 3D terrain viewer (and the flow viewer above), when this repo has them --------------------
+    // landing_config.json can hold terrain_url, set in the publisher under Tours Page Settings. It shows the Tour, Terrain, Flow pill in the
+    // control bar and a 3D button on the map, only for stops that fall inside that terrain site. The hand off carries the stop
+    // and its position, and a link back to exactly this stop, so the terrain viewer can offer Back to tour.
+    var terrainLink = '', terrainBounds = null, terrainManifest = null, terrainSiteBase = '', insetLayersControl = null, terrainLayersAdded = false;
+    function tourKey() { try { return (typeof tourId !== 'undefined' && tourId) ? tourId : 'single'; } catch (e) { return 'single'; } }
+    function setTerrainLink(cfg) {
+      var link = cfg;
+      if (!link) {           // a repo without the setting still works when the terrain viewer sent the address, and remembers it
+        try {
+          var q = new URLSearchParams(window.location.search).get('terrain');
+          if (q && /^https?:\/\//i.test(q)) { link = q; try { localStorage.setItem('terrainLink:' + tourKey(), q); } catch (e) {} }
+          else { try { link = localStorage.getItem('terrainLink:' + tourKey()) || ''; } catch (e) { link = ''; } }
+        } catch (e) { link = ''; }
+      }
+      terrainLink = /^https?:\/\//i.test(link || '') ? link : '';
+      terrainBounds = null; terrainManifest = null; terrainSiteBase = '';
+      if (terrainLink) {
+        try {
+          var u = new URL(terrainLink, location.href), site = u.searchParams.get('site');
+          if (site) {
+            var siteUrl = new URL('sites/' + encodeURIComponent(site) + '/', u).toString();
+            fetch(siteUrl + 'manifest.json', { cache: 'no-store' })
+              .then(function (r) { return r.ok ? r.json() : null; })
+              .then(function (m) {
+                if (!m) return;
+                terrainManifest = m; terrainSiteBase = siteUrl;
+                if (m.bounds4326) terrainBounds = m.bounds4326;
+                refreshLinkedButtons();
+                try { addTerrainLayersToInset(); } catch (e) { console.error('Terrain layers', e); }
+              })
+              .catch(function () { /* no bounds: the button just shows */ });
+          }
+        } catch (e) { /* not a usable address */ }
+      }
+      refreshLinkedButtons();
+    }
+    // Height above channel (the REM) and shaded relief from the terrain site, as plain tile layers in the map inset. They are
+    // ordinary map tiles, so the inset needs no 3D engine. Both start off; the layers button turns them on, and the REM brings a legend.
+    function addTerrainLayersToInset() {
+      if (!siteMap || !terrainManifest || terrainLayersAdded) return;
+      terrainLayersAdded = true;
+      var m = terrainManifest, base = terrainSiteBase, items = [];
+      var b = terrainBounds ? L.latLngBounds([terrainBounds[1], terrainBounds[0]], [terrainBounds[3], terrainBounds[2]]) : null;
+      if (m.relief) {
+        items.push({ label: 'Shaded relief', layer: L.tileLayer(base + 'relief/{z}/{x}/{y}.jpg', {
+          minNativeZoom: m.minzoom || 0, maxNativeZoom: m.maxzoom || 17, maxZoom: 22, opacity: 0.75, bounds: b, zIndex: 3, attribution: 'Terrain: SPSSEG' }) });
+      }
+      if (m.rem && m.rem.color) {
+        var r = m.rem, rem = L.tileLayer(base + r.color, {
+          minNativeZoom: r.minzoom || 0, maxNativeZoom: r.zoom || 17, maxZoom: 22, opacity: Math.max(0.6, r.opacity || 0.6), bounds: b, zIndex: 4, attribution: 'Terrain: SPSSEG' });
+        var legend = L.control({ position: 'bottomleft' });
+        legend.onAdd = function () {
+          var d = L.DomUtil.create('div', 'terrain-rem-legend'), cols = r.classes || [], n = cols.length || 1, br = r.breaks || [], unit = r.unit || 'ft';
+          var stops = cols.map(function (c, i) { return c + ' ' + (i * 100 / n) + '% ' + ((i + 1) * 100 / n) + '%'; }).join(',');
+          var first = br.length ? br[0] : 1, mid = br.length ? br[Math.floor(br.length / 2) - 1] : 10, last = br.length ? br[br.length - 1] : 20;
+          d.innerHTML = '<div class="trl-title">Height above channel</div><div class="trl-bar" style="background:linear-gradient(to right,' + stops + ')"></div>' +
+                        '<div class="trl-labels"><span>&lt; ' + first + ' ' + unit + '</span><span>' + mid + '</span><span>' + last + ' ' + unit + '</span></div>';
+          L.DomEvent.disableClickPropagation(d);
+          return d;
+        };
+        rem.on('add', function () { legend.addTo(siteMap); });
+        rem.on('remove', function () { legend.remove(); });
+        items.push({ label: 'Height above channel', layer: rem });
+      }
+      if (!items.length) return;
+      if (!insetLayersControl) insetLayersControl = L.control.layers(null, {}, { collapsed: true }).addTo(siteMap);
+      items.forEach(function (it) { insetLayersControl.addOverlay(it.layer, it.label); });
+    }
+    function stopInTerrain() {
+      if (!terrainBounds) return true;
+      var ll = currentSiteLatLng(); if (!ll) return true;
+      var b = terrainBounds; return ll[0] >= b[1] && ll[0] <= b[3] && ll[1] >= b[0] && ll[1] <= b[2];
+    }
+    function refreshLinkedButtons() {
+      var t = !!terrainLink && stopInTerrain(), f = !!flowLink;
+      var inset = document.getElementById('site-map-terrain-btn'); if (inset) inset.style.display = t ? 'flex' : 'none';
+      var pill = document.getElementById('linked-pill'); if (!pill || !window.SpssegNav) return;
+      SpssegNav.renderPill(pill, { current: 'tour', links: { terrain: t ? terrainLink : '', flow: f ? flowLink : '' },
+        hrefFor: { terrain: terrainHref, flow: flowViewerHref }, newTab: { flow: true }, hideEmpty: true });
+      if (pill.style.display === '') pill.style.display = 'flex';
+    }
+    function tourReturnUrl() {                // this tour page, at this stop, without the passing view parameters
+      var u = new URL(location.href); u.hash = '';
+      ['terrain', 'yaw', 'pitch', 'fov'].forEach(function (k) { u.searchParams.delete(k); });
+      return u.toString();
+    }
+    function currentStopName() {
+      if (pendingMapData && pendingMapData.type === 'tour') {
+        var s = (pendingMapData.sites || []).filter(function (x) { return x.site_id === activeTourSiteId; })[0];
+        return (s && (s.display_name || s.site_id)) || '';
+      }
+      return (pendingMapData && pendingMapData.label) || '';
+    }
+    function goTerrain() { var h = terrainHref(); if (h) window.location.href = h; }
+    function terrainHref() {
+      var u; try { u = new URL(terrainLink, location.href); } catch (e) { return ''; }
+      var ll = currentSiteLatLng();
+      if (ll) { u.searchParams.set('lat', ll[0].toFixed(6)); u.searchParams.set('lng', ll[1].toFixed(6)); }
+      var name = currentStopName(); if (name) u.searchParams.set('stop', name);
+      u.searchParams.set('tour', tourReturnUrl());
+      if (flowLink) u.searchParams.set('flow', flowLink);
+      return u.toString();
+    }
+    (function () {
+      var t1 = document.getElementById('site-map-terrain-btn');
+      if (t1) t1.addEventListener('click', goTerrain);
+    })();
 
     function createFlowLayer(map, info) {
       var base = info.base, siteId = info.site;
@@ -4580,6 +4900,59 @@
       }
       function startLoop() { if (!raf && shown) raf = requestAnimationFrame(frame); }
 
+      // ---- depth and velocity where the shown stop is ----
+      // Reads the two flow pictures at the stop's map position, for the scenario in the pickers. Depth is stored in 16 bits
+      // and velocity in 8 bits (capped at the site maximum), so the numbers are good to about a tenth.
+      function stopName() {
+        var name = '';
+        if (pendingMapData && pendingMapData.type === 'tour') {
+          var s0 = (pendingMapData.sites || []).filter(function (x) { return x.site_id === activeTourSiteId; })[0];
+          name = (s0 && (s0.display_name || s0.site_id)) || '';
+        } else if (pendingMapData && pendingMapData.label) {
+          name = pendingMapData.label;
+        }
+        return name;
+      }
+      function esc2(t) { var d = document.createElement('div'); d.textContent = String(t); return d.innerHTML; }
+      function sampleAt(i, j) {
+        var W = manifest.width, H = manifest.height;
+        if (i < 0 || j < 0 || i >= W || j >= H) return null;
+        var p = (j * W + i) * 4, d = cur.depth.data, f = cur.flow.data, d16 = d[p] * 256 + d[p + 1];
+        if (d[p + 3] === 0 || d16 < minD16()) return null;
+        return { depth: d16 / 65535 * manifest.maxDepth, vel: f[p + 2] / 255 * manifest.maxSpeed, capped: f[p + 2] >= 255 };
+      }
+      function updateHere() {
+        if (!els.here) return;
+        var ll = (typeof currentSiteLatLng === 'function') ? currentSiteLatLng() : null;
+        if (!cur || !manifest || !ll || ll[0] == null || ll[1] == null) { els.here.style.display = 'none'; return; }
+        var R = 6378137, x = ll[1] * Math.PI / 180 * R, y = Math.log(Math.tan(Math.PI / 4 + ll[0] * Math.PI / 360)) * R;
+        var b = manifest.bounds3857, W = manifest.width, H = manifest.height;
+        var fi = (x - b[0]) / (b[2] - b[0]) * W, fj = (b[3] - y) / (b[3] - b[1]) * H, i = Math.floor(fi), j = Math.floor(fj);
+        var nm = stopName(), lead = '<b>' + (nm ? 'At ' + esc2(nm) : 'At this stop') + ':</b> ', u = manifest.units || { length: 'ft', velocity: 'ft/s' }, txt;
+        if (fi < 0 || fj < 0 || fi >= W || fj >= H) {
+          txt = lead + 'outside the modeled area';
+        } else {
+          var hit = sampleAt(i, j);
+          if (hit) {
+            txt = lead + 'depth ' + hit.depth.toFixed(1) + ' ' + u.length + ', velocity ' + (hit.capped ? '\u2265 ' : '') + hit.vel.toFixed(1) + ' ' + u.velocity;
+          } else {
+            // dry here: say how far the nearest water is, if it is close
+            var mpp = (b[2] - b[0]) / W * Math.cos(ll[0] * Math.PI / 180), rmax = Math.max(1, Math.min(60, Math.ceil(60 / mpp))), best = null;
+            for (var dj = -rmax; dj <= rmax; dj++) for (var di = -rmax; di <= rmax; di++) {
+              var dist = Math.sqrt(di * di + dj * dj);
+              if (dist > rmax || (best !== null && dist >= best)) continue;
+              if (sampleAt(i + di, j + dj)) best = dist;
+            }
+            txt = lead + 'dry at this flow';
+            if (best !== null) {
+              var meters = best * mpp, ft = /ft|feet/i.test(String(u.length)), shown = ft ? meters * 3.281 : meters;
+              txt += ', water about ' + (shown < 10 ? shown.toFixed(0) : Math.round(shown / 5) * 5) + ' ' + (ft ? 'ft' : 'm') + ' away';
+            }
+          }
+        }
+        els.here.innerHTML = txt; els.here.title = els.here.textContent; els.here.style.display = 'block';
+      }
+
       // ---- choosing a scenario ----
       function buildGrid() {
         var items = [];
@@ -4621,7 +4994,7 @@
           if (my !== token) return;
           cur = scn; particles = []; els.stat.textContent = '';
           els.noflow.style.display = scn.meta.flow === false ? 'inline' : 'none';
-          legend(); place(); clearLines(); drawFill(); startLoop();
+          legend(); place(); clearLines(); drawFill(); startLoop(); updateHere();
         }).catch(function (e) { if (my === token) els.stat.textContent = e.message || 'Could not load the flow data.'; });
       }
       // The controls fold away to a one line summary and the legend, so the box does not cover a small map.
@@ -4673,9 +5046,10 @@
           '<button type="button" class="ficon" id="flow-open" title="Open the full flow viewer in a new tab">&#8599;</button></div>' +
           '<div class="frow fhide" id="flow-ramprow"><select id="flow-ramp" aria-label="Color scheme" title="Color scheme"></select></div>' +
           '<div class="fleg" id="flow-leg"></div><div class="fnum" id="flow-nums"><span>0</span><span id="flow-max"></span></div>' +
+          '<div class="fhere" id="flow-here" style="display:none"></div>' +
           '<div class="fstat"><span id="flow-stat"></span><span id="flow-noflow" style="display:none;color:#f2b36b">No flow direction for this scenario.</span></div>';
         document.getElementById('site-map-panel').appendChild(box);
-        ['flow', 'scen', 'seg', 'lines', 'fit', 'open', 'ramp', 'ramprow', 'sum', 'collapse', 'leg', 'nums', 'max', 'stat', 'noflow'].forEach(function (k) {
+        ['flow', 'scen', 'seg', 'lines', 'fit', 'open', 'ramp', 'ramprow', 'sum', 'collapse', 'leg', 'nums', 'max', 'here', 'stat', 'noflow'].forEach(function (k) {
           els[k] = box.querySelector(k === 'flow' || k === 'scen' ? '#flow-sel-' + k : '#flow-' + k);
         });
         ['mousedown', 'dblclick', 'wheel', 'touchstart', 'pointerdown'].forEach(function (ev) { box.addEventListener(ev, function (e) { e.stopPropagation(); }); });
@@ -4737,7 +5111,7 @@
           shown = true;
           if (!bound) { bindMap(); bound = true; }
           fillPane.style.display = linePane.style.display = '';
-          if (manifest) { box.style.display = 'block'; place(); drawFill(); startLoop(); return Promise.resolve(); }
+          if (manifest) { box.style.display = 'block'; place(); drawFill(); startLoop(); updateHere(); return Promise.resolve(); }
           return fetch(base + 'sites/' + encodeURIComponent(siteId) + '/manifest.json?t=' + Date.now(), { cache: 'no-store' })
             .then(function (r) { if (!r.ok) throw new Error('missing'); return r.json(); })
             .then(function (m) { manifest = m; buildBox(); box.style.display = 'block'; legend(); choose(); })
@@ -4749,6 +5123,7 @@
           if (raf) { cancelAnimationFrame(raf); raf = null; }
         },
         isOn: function () { return shown; },
+        refreshHere: function () { if (shown) updateHere(); },
         ramps: function () { return { depth: rampSel.depth, velocity: rampSel.velocity, def: RAMP_DEFAULT }; },
         zoomToFlow: function () { if (manifest) map.fitBounds(L.latLngBounds(manifest.bounds4326), { padding: [20, 20] }); }
       };
@@ -5247,9 +5622,10 @@
           if (o.default_on !== false) layer.addTo(siteMap);
         });
         if (Object.keys(overlayLayers).length) {
-          L.control.layers(null, overlayLayers, { collapsed: true }).addTo(siteMap);
+          insetLayersControl = L.control.layers(null, overlayLayers, { collapsed: true }).addTo(siteMap);
         }
       }
+      try { addTerrainLayersToInset(); } catch (e) { console.error('Terrain layers', e); }
       // Scale bar, metric and imperial, lower left.
       // One line on a touch screen (feet), both units on a desktop.
       var touchScale = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
@@ -6264,8 +6640,8 @@
       function aimAndSave() {
         var btn = document.getElementById('hdg-aim-btn');
         var b = neighborBearing();
-        if (b == null || !viewL) { flash(btn, 'Missing GPS for neighbor', 1800); return; }
-        var yaw = viewL.parameters().yaw * 180 / Math.PI;
+        if (b == null || (!viewL && !flatConeActive)) { flash(btn, 'Missing GPS for neighbor', 1800); return; }
+        var yaw = flatConeActive ? 0 : viewL.parameters().yaw * 180 / Math.PI;
         saveThen((b - yaw + 360) % 360, btn, true);
       }
       var mapArmed = false;
@@ -6278,9 +6654,10 @@
       function mapClick(e) {
         if (!mapArmed) return;
         var me = findTourSiteLatLng(activeTourSiteId);
-        if (!me || !viewL) { setArmed(false); return; }
+        if (!me || (!viewL && !flatConeActive)) { setArmed(false); return; }
         var b = computeBearingJs(me[0], me[1], e.latlng.lat, e.latlng.lng);
-        var yaw = viewL.parameters().yaw * 180 / Math.PI;
+        // A flat photo has no pan: the photo's center is the direction the camera faced.
+        var yaw = flatConeActive ? 0 : viewL.parameters().yaw * 180 / Math.PI;
         setArmed(false);
         saveThen((b - yaw + 360) % 360, document.getElementById('hdg-map-btn'), true);
       }
@@ -7263,7 +7640,7 @@
               upDeg = Math.max(-80, Math.min(80, Math.atan2(dz, dist) * 180 / Math.PI));
               pitch = -upDeg * Math.PI / 180;
             }
-            var label = linkName(st, c.no) + (showDist ? ' \u00B7 ' + Math.round(dist) + ' m' : '');
+            var label = linkName(st, c.no) + (showDist ? ' \u00B7 ' + Math.round(dist * 3.28084) + ' ft' : '');
             diag.push({ target: label, kind: kind, alt: st.alt, rel_alt: st.rel_alt,
                         dist_m: Math.round(dist), dz_m: dz == null ? null : Math.round(dz * 10) / 10,
                         degrees_above_horizon: Math.round(upDeg) });
@@ -7498,6 +7875,7 @@
         // comes next -- so it's deliberately left alone here.
         if (tourHasMap) mapToggleBtn.style.display = 'inline-block';
         flatConeActive = false;
+        document.body.classList.remove('flat-stop');
       }
 
       function showFlatStop(sid, config, fallbackLabel) {
@@ -7544,7 +7922,14 @@
         document.getElementById('pano-right-wrapper').style.visibility = 'hidden';
         document.getElementById('autorotate-btn').style.display = 'none';
         document.getElementById('reset-btn').style.display = 'none';
-        document.getElementById('edit-tools-panel').style.display = 'none';
+        if (location.hostname === '127.0.0.1' || location.hostname === 'localhost') {
+          document.getElementById('edit-tools-panel').style.display = 'flex';
+          document.getElementById('heading-dial-row').style.display = 'block';
+          document.getElementById('position-row').style.display = 'block';
+          document.body.classList.add('flat-stop');
+        } else {
+          document.getElementById('edit-tools-panel').style.display = 'none';
+        }
         document.getElementById('hotspots-toggle-btn').style.display = 'none';
         // The map is tour wide, so it stays available for flat stops
         // (its panel floats above the flat overlay). A flat stop with a
@@ -7916,8 +8301,10 @@
         var fallbackLabel = linkEl ? linkEl.textContent : sid;
         activeTourSiteId = sid;
         updateTourUrl(sid);
+        try { refreshLinkedButtons(); } catch (e) { /* not ready */ }
         updateLinkAllUndoVisibility();
         updateActiveMapMarker();
+        try { if (flowLayer && flowLayer.isOn()) flowLayer.refreshHere(); } catch (e) { /* flow layer not ready */ }
         updateTourCompareButton(null);
 
         if (sceneCache[sid] && sceneCache[sid].flat) {
@@ -8119,6 +8506,7 @@
         if (sceneCache[sid]) {
           sceneCache[sid].heading = heading;
           sceneCache[sid].headingKnown = known;
+          if (sceneCache[sid].flat && sceneCache[sid].config) sceneCache[sid].config.heading = heading;
         }
       };
 
@@ -8141,6 +8529,7 @@
           window.helpTourName = shownName;
           window.helpTourIntro = (manifest.intro_note || '').toString().trim();
           tourLoopNav = manifest.loop_nav !== false;
+          if (window.setTourLinkOverrides) window.setTourLinkOverrides(manifest.flow_url, manifest.terrain_url);
           (function () {
             var full = String(manifest.name || tourId);
             var pm = full.match(/^(.*?)\s*\(([^()]*)\)\s*$/);

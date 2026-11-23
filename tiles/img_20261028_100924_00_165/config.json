@@ -19,8 +19,9 @@
   "basemap_url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
   "mobile_1": 5000,
   "mobile_2": 0,
-  "heading_offset": null,
+  "heading_offset": 343.01458304903167,
   "overlays": [],
   "alt_checked": true,
-  "alt": 201.82
+  "alt": 201.82,
+  "heading_confirmed": true
 }
